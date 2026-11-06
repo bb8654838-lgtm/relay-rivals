@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#070916">
+  <meta name="description" content="Relay Rivals — a fast, deterministic 2–4 player browser strategy game.">
+  <title>Relay Rivals — Claim the circuit</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="topbar">
+    <button class="brand" data-home aria-label="Relay Rivals home"><span class="brand-mark">R</span><span>RELAY <b>RIVALS</b></span></button>
+    <div class="top-actions"><span class="live-dot">LIVE MULTIPLAYER</span><button class="ghost compact" data-rules>How to play</button></div>
+  </header>
+
+  <main>
+    <section id="landing" class="screen landing">
+      <div class="hero-copy">
+        <p class="eyebrow">TURN-BASED CIRCUIT CONTROL</p>
+        <h1>Outthink the grid.<br><em>Own the relay.</em></h1>
+        <p class="lede">A six-round strategy sprint for 2–4 players. Expand, fortify, and steal nodes before the circuit locks.</p>
+        <div class="cta-row">
+          <button id="createBtn" class="primary">Create a match <span>→</span></button>
+          <button id="joinBtn" class="secondary">Join with code</button>
+        </div>
+        <div class="trust-row"><span>✓ No sign-in</span><span>✓ Free to play</span><span>✓ AI backfill</span></div>
+      </div>
+      <div class="hero-art" aria-label="Animated relay circuit preview">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="core"><span>6</span><small>ROUNDS</small></div>
+        <span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span><span class="spark s4"></span>
+      </div>
+      <div class="feature-strip">
+        <article><span>01</span><h2>DEPLOY</h2><p>Convert energy into new units at any node you control.</p></article>
+        <article><span>02</span><h2>MARCH</h2><p>Move across the ring, break shields, and capture territory.</p></article>
+        <article><span>03</span><h2>FORTIFY</h2><p>Trade tempo for a shield that absorbs the next attack.</p></article>
+      </div>
+    </section>
+
+    <section id="lobby" class="screen hidden lobby-screen" aria-live="polite">
+      <div class="panel lobby-card">
+        <p class="eyebrow">MATCH LOBBY</p>
+        <h1>Room <button id="copyCode" class="code" title="Copy room code">------</button></h1>
+        <p id="lobbyHint" class="muted">Share the link. Players can join instantly — no account required.</p>
+        <div id="playerList" class="player-list"></div>
+        <div class="lobby-actions">
+          <button id="shareBtn" class="secondary">Copy invite link</button>
+          <button id="botsBtn" class="secondary">Fill with AI</button>
+          <button id="startBtn" class="primary">Start match</button>
+        </div>
+        <p id="lobbyError" class="error" role="alert"></p>
+      </div>
+    </section>
+
+    <section id="game" class="screen hidden game-screen" aria-live="polite">
+      <div class="game-head">
+        <div><p class="eyebrow">ROOM <span id="gameCode"></span></p><h1 id="turnTitle">Circuit syncing…</h1></div>
+        <div class="round-block"><span id="roundLabel">ROUND 1 / 6</span><div class="timer"><i id="timerBar"></i></div></div>
+      </div>
+      <div id="scoreboard" class="scoreboard"></div>
+      <div class="arena-layout">
+        <div class="board-shell"><svg id="board" viewBox="0 0 720 720" role="img" aria-label="Relay circuit game board"></svg><div class="board-core"><span id="coreRound">1</span><small>ROUND</small></div></div>
+        <aside class="command-panel panel">
+          <p class="eyebrow">COMMAND DECK</p>
+          <h2 id="commandTitle">Waiting for your turn</h2>
+          <p id="commandHint" class="muted">Legal actions appear here.</p>
+          <div id="legalMoves" class="move-list"></div>
+          <div class="event-log"><h3>LIVE FEED</h3><ol id="history"></ol></div>
+        </aside>
+      </div>
+      <p id="gameError" class="error" role="alert"></p>
+    </section>
+
+    <section id="finish" class="screen hidden finish-screen">
+      <div class="panel finish-card"><p class="eyebrow">CIRCUIT LOCKED</p><h1 id="winnerTitle">Winner</h1><p id="winnerSummary" class="lede"></p><div id="finalScores" class="final-scores"></div><div class="cta-row"><button id="rematchBtn" class="primary">New match</button><button id="replayBtn" class="secondary">View replay data</button></div><pre id="replayData" class="replay hidden"></pre></div>
+    </section>
+  </main>
+
+  <dialog id="setupDialog" class="modal">
+    <form method="dialog" id="setupForm" class="panel modal-card">
+      <button class="modal-close" value="cancel" aria-label="Close">×</button>
+      <p id="setupEyebrow" class="eyebrow">CREATE A MATCH</p><h2 id="setupTitle">Enter the circuit</h2>
+      <label>Display name<input id="nameInput" maxlength="24" autocomplete="nickname" placeholder="Your callsign" required></label>
+      <label id="codeField" class="hidden">Room code<input id="codeInput" maxlength="8" autocomplete="off" placeholder="ABC123"></label>
+      <label id="sizeField">Players<select id="sizeInput"><option value="2">2 players</option><option value="3">3 players</option><option value="4">4 players</option></select></label>
+      <p id="setupError" class="error" role="alert"></p><button id="setupSubmit" class="primary full" value="default">Create lobby</button>
+    </form>
+  </dialog>
+
+  <dialog id="rulesDialog" class="modal"><div class="panel modal-card rules"><button class="modal-close" data-close-rules aria-label="Close">×</button><p class="eyebrow">FIELD MANUAL</p><h2>Win the relay in 6 rounds</h2><ol><li><b>One action per turn.</b> Focus for +2 energy, deploy a unit for 1 energy, fortify a controlled node, or march to a neighboring node.</li><li><b>Capture territory.</b> A stronger march takes the target. Shields absorb one incoming unit before combat.</li><li><b>Score every round.</b> Each controlled node earns one point. The starting player rotates, so tempo matters.</li><li><b>Highest score wins.</b> Ties break by territory, then units, energy, and finally player order — there is always one winner.</li></ol><button class="primary full" data-close-rules>Ready</button></div></dialog>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

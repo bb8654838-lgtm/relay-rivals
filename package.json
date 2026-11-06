@@ -1,0 +1,16 @@
+{
+  "name": "relay-rivals",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A fast turn-based strategy game for humans and HTTP clients.",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check src/engine.js && node --check src/worker.js && node --check public/app.js && node --check examples/sample-bot.mjs",
+    "dev": "wrangler dev --local --port 8787",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.158.0"
+  }
+}
